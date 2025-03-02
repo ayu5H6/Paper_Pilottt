@@ -18,7 +18,6 @@ app.post("/summarize", async (req, res) => {
       return res.status(400).json({ error: "No text provided" });
     }
 
-    // ✅ Fixed typo in API URL
     const response = await axios.post("http://127.0.0.1:8000/summarize", {
       text,
     });
@@ -47,7 +46,7 @@ app.post("/analyze", upload.single("pdf"), async (req, res) => {
       formData,
       {
         headers: {
-          ...formData.getHeaders(), // ✅ Correctly set headers
+          ...formData.getHeaders(), 
         },
       }
     );

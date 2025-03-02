@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
-import ReactTooltip from "react-tooltip"; // This should work as default import.
- // Corrected import
+import ReactTooltip from "react-tooltip"; 
 
 const ArticleReader = () => {
   const [article, setArticle] = useState("");
@@ -26,7 +25,6 @@ const fetchDefinitions = async (words) => {
         `https://api.dictionaryapi.dev/api/v2/entries/en/${word}`
       );
 
-      // ✅ Check if the API response contains valid data
       if (
         !response.data ||
         !Array.isArray(response.data) ||
@@ -43,7 +41,6 @@ const fetchDefinitions = async (words) => {
       definitionsMap[word] = "Definition not found";
     }
 
-    // ✅ Add a delay to prevent rate limiting (500ms)
     await new Promise((resolve) => setTimeout(resolve, 1000));
   }
 
@@ -51,9 +48,6 @@ const fetchDefinitions = async (words) => {
 };
 
 
-
-
-  // Function to process the article
   const processArticle = async () => {
     if (!article.trim()) {
       alert("Please enter an article.");
