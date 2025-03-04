@@ -4,7 +4,7 @@ import { getFirestore } from "firebase/firestore";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyDHzTDXr7yPkqyzoBdFCtOToTSwmd45P80",
+  apiKey: process.env.Firebase_api,
   authDomain: "realitimecollab.firebaseapp.com",
   projectId: "realitimecollab",
   storageBucket: "realitimecollab.firebasestorage.app",
