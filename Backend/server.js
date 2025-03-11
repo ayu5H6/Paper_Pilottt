@@ -154,6 +154,50 @@ app.use("/api", apiRoutes);
 // Initialize Socket.io with io instance
 initializeSocket(io);
 
+<<<<<<< HEAD
+    const response = await axios.post("http://127.0.0.1:8000/summarize", {
+      text,
+    });
+
+    res.json(response.data);
+  } catch (error) {
+    console.error("Express Error:", error.response?.data || error.message);
+    res
+      .status(500)
+      .json({ error: error.response?.data || "Summarization failed" });
+  }
+});
+
+
+app.post("/analyze", upload.single("pdf"), async (req, res) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({ error: "No file uploaded" });
+    }
+
+    const formData = new FormData();
+    formData.append("pdf", fs.createReadStream(req.file.path));
+
+    const response = await axios.post(
+      "http://127.0.0.1:8000/analyze",
+      formData,
+      {
+        headers: {
+          ...formData.getHeaders(), 
+        },
+      }
+    );
+
+    res.json(response.data);
+  } catch (error) {
+    console.error("Express Error:", error.response?.data || error.message);
+    res.status(500).json({ error: error.response?.data || "Analysis failed" });
+  }
+});
+
+app.listen(5000, () => {
+=======
 server.listen(5000, () => {
+>>>>>>> main
   console.log("Express server running on http://localhost:5000");
 });
