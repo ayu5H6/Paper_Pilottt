@@ -5,7 +5,7 @@ import PdfUploader from './components/PdfUploader'
 import TextSummarizer from './components/TextSummarizer';
 import RealtimeEditor from './components/RealtimeCollabEditor';
 
-import { Auth } from './components/Auth.jsx';
+// import { Auth } from './components/Auth.jsx';
 function App() {
   const [count, setCount] = useState(0)
 
@@ -17,10 +17,10 @@ function App() {
       <TextSummarizer/> */}
 
       <div>
-        {/* <h1>Research Paper Collaboration</h1>
-        <RealtimeEditor docId="sample-document" /> */}
+        <h1>Research Paper Collaboration</h1>
+        <RealtimeEditor docId="sample-document" />
 
-        <Auth />
+        {/* <Auth /> */}
       </div>
     </>
   );
