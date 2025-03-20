@@ -11,15 +11,24 @@
   },
   "dependencies": {
     "@google/generative-ai": "^0.22.0",
+    "@react-pdf-viewer/core": "^3.12.0",
+    "@react-pdf-viewer/default-layout": "^3.12.0",
+    "@tailwindcss/vite": "^4.0.14",
     "@tinymce/tinymce-react": "^6.0.0",
-    "axios": "^1.7.9",
-    "draft-js": "^0.11.7",
+    "axios": "^1.8.3",
     "firebase": "^11.4.0",
+    "lucide-react": "^0.482.0",
+    "motion": "^12.5.0",
+    "pdfjs-dist": "^3.11.174",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "react-quill": "^2.0.0",
+    "react-pdf": "^5.0.0",
+    "react-router-dom": "^7.3.0",
     "react-tooltip": "^4.2.21",
-    "socket.io-client": "^4.8.1"
+    "socket.io-client": "^4.8.1",
+    "swiper": "^11.2.5",
+    "tailwindcss": "^4.0.14",
+    "tailwindcss-animate": "^1.0.7"
   },
   "devDependencies": {
     "@eslint/js": "^9.19.0",

@@ -1,102 +1,144 @@
-import { useState } from "react";
+import React, { useState, useRef } from "react";
+import axios from "axios";
 
-const PDFUploader = () => {
-  const [file, setFile] = useState(null);
-  const [analysis, setAnalysis] = useState(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
-  const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB limit
+import { Worker, Viewer } from "@react-pdf-viewer/core";
+import "@react-pdf-viewer/core/lib/styles/index.css";
 
-  const handleFileChange = (event) => {
-    const selectedFile = event.target.files[0];
+const PdfUploader = () => {
+  const [pdfFile, setPdfFile] = useState(null);
+  const [pdfUrl, setPdfUrl] = useState(null);
+  const [messages, setMessages] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const chatContainerRef = useRef(null);
 
-    if (!selectedFile) {
-      setError("No file selected.");
-      return;
+  // Handle file upload
+  const handleFileChange = async (e) => {
+    const file = e.target.files[0];
+    if (file && file.type === "application/pdf") {
+      const fileUrl = URL.createObjectURL(file);
+      setPdfFile(file);
+      setPdfUrl(fileUrl);
+      setMessages([]); // Clear previous messages
+      await sendPdfToBackend(file);
+    } else {
+      alert("Please upload a valid PDF file.");
     }
-
-    if (selectedFile.size > MAX_FILE_SIZE) {
-      setError("File size exceeds 5MB limit. Please upload a smaller file.");
-      setFile(null);
-      return;
-    }
-
-    setFile(selectedFile);
-    setAnalysis(null);
-    setError(null);
   };
 
-  const handleUpload = async () => {
-    if (!file) {
-      alert("Please select a PDF file.");
-      return;
-    }
-
-    setLoading(true);
-    setError(null);
+  const sendPdfToBackend = async (file) => {
+    setIsLoading(true);
     const formData = new FormData();
     formData.append("pdf", file);
 
     try {
-      const response = await fetch("http://localhost:5000/analyze", {
-        method: "POST",
-        body: formData,
-      });
+      const response = await axios.post(
+        "http://localhost:5000/analyze",
+        formData,
+        {
+          headers: { "Content-Type": "multipart/form-data" },
+        }
+      );
 
-      if (!response.ok) {
-        const errorText = await response.text(); // Read error message
-        throw new Error(`Server error ${response.status}: ${errorText}`);
+      if (response.data.extracted_sections) {
+        // Convert AI response to readable JSON
+        const aiContent = JSON.stringify(
+          response.data.extracted_sections,
+          null,
+          2
+        );
+
+        // Create AI message format
+        const geminiMessage = {
+          type: "ai",
+          content: `Here’s the structured breakdown from ASM:\n\n${aiContent}`,
+        };
+
+        setMessages((prevMessages) => [...prevMessages, geminiMessage]);
+      } else {
+        setMessages((prevMessages) => [
+          ...prevMessages,
+          {
+            type: "system",
+            content: "No valid sections extracted from the PDF.",
+          },
+        ]);
       }
-
-      const data = await response.json();
-      setAnalysis(data);
     } catch (error) {
-      console.error("Error uploading file:", error);
-      setError("Failed to process PDF. " + error.message);
+      console.error("Error processing PDF:", error);
+
+      setMessages((prevMessages) => [
+        ...prevMessages,
+        {
+          type: "system",
+          content: "Failed to analyze the PDF. Try again later.",
+        },
+      ]);
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
   };
 
   return (
-    <div style={{ textAlign: "center", padding: "20px" }}>
-      <h2>Upload a Research Paper (PDF) for Analysis</h2>
-      <input type="file" accept="application/pdf" onChange={handleFileChange} />
-
-      {file && (
-        <p style={{ fontSize: "14px", color: "#007BFF" }}>
-          Selected File: {file.name} ({(file.size / 1024 / 1024).toFixed(2)} MB)
-        </p>
-      )}
-
-      <div style={{ marginTop: "10px" }}>
-        <button onClick={handleUpload} disabled={loading}>
-          {loading ? "Analyzing..." : "Analyze Paper"}
-        </button>
+    <div className="flex flex-col h-screen">
+      <div className="p-4 bg-gray-100 border-b">
+        <input
+          type="file"
+          accept="application/pdf"
+          onChange={handleFileChange}
+          className="mb-2"
+        />
+        <h1 className="text-xl font-bold">PDF Viewer with AI Chat</h1>
       </div>
 
-      {error && <p style={{ color: "red" }}>{error}</p>}
-
-      {analysis && (
-        <div style={{ marginTop: "20px", textAlign: "left" }}>
-          <h3>Extracted Sections:</h3>
-          {Object.entries(analysis.sections || {}).map(([key, value]) => (
-            <div key={key}>
-              <h4>{key}</h4>
-              <p>{value.substring(0, 500)}...</p>
+      <div className="flex flex-1 overflow-hidden">
+        {/* PDF Viewer - Left side (50%) */}
+        <div className="w-1/2 border-r">
+          {pdfFile ? (
+            <div className="h-full flex flex-col">
+              <div className="flex-1 overflow-auto">
+                <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.11.174/build/pdf.worker.min.js">
+                  <Viewer fileUrl={pdfUrl} />
+                </Worker>
+              </div>
             </div>
-          ))}
-
-          <h3>Topics:</h3>
-          <p>
-            {analysis.topics
-              ? analysis.topics.join(" | ")
-              : "No topics extracted"}
-          </p>
+          ) : (
+            <div className="h-full flex items-center justify-center bg-gray-100">
+              <p className="text-gray-500">Please upload a PDF file</p>
+            </div>
+          )}
         </div>
-      )}
+
+        {/* Chat Interface - Right side (50%) */}
+        <div className="w-1/2 flex flex-col">
+          <div ref={chatContainerRef} className="flex-1 p-4 overflow-y-auto">
+            {messages.map((message, index) => (
+              <div
+                key={index}
+                className={`mb-4 ${
+                  message.type === "user" ? "text-right" : "text-left"
+                }`}
+              >
+                <div
+                  className={`inline-block px-4 py-2 rounded-lg ${
+                    message.type === "user"
+                      ? "bg-blue-500 text-white rounded-br-none"
+                      : "bg-green-500 text-white rounded-bl-none"
+                  }`}
+                >
+                  {/* Render HTML content using dangerouslySetInnerHTML */}
+                  <div
+                    dangerouslySetInnerHTML={{
+                      __html: message.content, // This contains the formatted HTML
+                    }}
+                  />
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
     </div>
   );
 };
 
-export default PDFUploader;
+export default PdfUploader;
