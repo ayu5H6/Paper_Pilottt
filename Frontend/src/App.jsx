@@ -3,99 +3,127 @@ import {
   Routes,
   Route,
   Navigate,
-  Link,
+  useLocation,
 } from "react-router-dom";
-import { useState } from "react";
-import Auth from "./components/Auth.jsx";
+import { useState, useEffect } from "react";
+
+// Components
+import Navbar from "./components/navbar";
+import PageLoader from "./components/PageLoader";
+import Auth from "./components/Auth";
+import About from "./components/About";
 import GrammarChecker from "./components/Grammer";
 import ArticleReader from "./components/ArticleReader";
 import PdfUploader from "./components/PdfUploader";
 import TextSummarizer from "./components/TextSummarizer";
 import ResearchEditor from "./components/RealtimeCollabEditor";
-import GeminiChat from "./components/GeminiChat.jsx";
-import Navbar from "./components/navbar.jsx";
-import About from "./components/TeamSection.jsx";
-import Chatbot from "./components/Chatbot.jsx";
-import CitationGenerator from "./components/CitationGenerator.jsx";
-function App() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false); // Track login status
+import GeminiChat from "./components/GeminiChat";
+import Chatbot from "./components/Chatbot";
+import CitationGenerator from "./components/CitationGenerator";
+import Buy from "./components/Buy";
+
+function AppRoutes({ isAuthenticated, setIsAuthenticated }) {
+  const location = useLocation();
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    setLoading(true);
+    const timer = setTimeout(() => setLoading(false), 2000); // adjust timing
+    return () => clearTimeout(timer);
+  }, [location.pathname]);
 
   return (
-    // <Router>
-    //   <nav className="p-4 bg-gray-800 text-white flex gap-4">
-    //     {!isAuthenticated ? (
-    //       <Link to="/" className="hover:underline">
-    //         Login
-    //       </Link>
-    //     ) : (
-    //       <>
-    //         <Link to="/gemini-chat" className="hover:underline">
-    //           Gemini Chat
-    //         </Link>
-    //         <Link to="/article-reader" className="hover:underline">
-    //           Article Reader
-    //         </Link>
-    //         <Link to="/pdf-uploader" className="hover:underline">
-    //           PDF Uploader
-    //         </Link>
-    //         <Link to="/text-summarizer" className="hover:underline">
-    //           Text Summarizer
-    //         </Link>
-    //         <Link to="/realtime-editor" className="hover:underline">
-    //           Realtime Editor
-    //         </Link>
-    //       </>
-    //     )}
-    //   </nav>
+    <>
+      <Navbar isAuthenticated={isAuthenticated} setIsAuthenticated={setIsAuthenticated} />
+      {loading && <PageLoader />}
 
-    //   <Routes>
-    //     {/* Default route shows the Auth page */}
-    //     <Route
-    //       path="/"
-    //       element={<Auth setIsAuthenticated={setIsAuthenticated} />}
-    //     />
+      <Routes>
+        <Route path="/" element={<About />} />
+        <Route
+          path="/login"
+          element={
+            isAuthenticated ? <Navigate to="/about" /> : <Auth setIsAuthenticated={setIsAuthenticated} />
+          }
+        />
+        <Route
+          path="/about"
+          element={
+            isAuthenticated ? <About /> : <Navigate to="/login" />
+          }
+        />
+        <Route
+          path="/grammar-checker"
+          element={
+            isAuthenticated ? <GrammarChecker /> : <Navigate to="/login" />
+          }
+        />
+        <Route
+          path="/article-reader"
+          element={
+            isAuthenticated ? <ArticleReader /> : <Navigate to="/login" />
+          }
+        />
+        <Route
+          path="/pdf-uploader"
+          element={
+            isAuthenticated ? <PdfUploader /> : <Navigate to="/login" />
+          }
+        />
+        <Route
+          path="/text-summarizer"
+          element={
+            isAuthenticated ? <TextSummarizer /> : <Navigate to="/login" />
+          }
+        />
+        <Route
+          path="/realtime-editor"
+          element={
+            isAuthenticated ? (
+              <ResearchEditor docId="sample-document" />
+            ) : (
+              <Navigate to="/login" />
+            )
+          }
+        />
+        <Route
+          path="/citation-generator"
+          element={
+            isAuthenticated ? <CitationGenerator /> : <Navigate to="/login" />
+          }
+        />
+        <Route
+          path="/chatbot"
+          element={
+            isAuthenticated ? <Chatbot /> : <Navigate to="/login" />
+          }
+        />
+        <Route
+    path="/buy"
+    element={
+      isAuthenticated ? <Buy /> : <Navigate to="/login" />
+    }
+  />
+      </Routes>
+    </>
+  );
+}
 
-    //     {/* Show Gemini Chat (GrammarChecker) only if authenticated */}
-    //     <Route
-    //       path="/gemini-chat"
-    //       element={isAuthenticated ? <GrammarChecker /> : <Navigate to="/" />}
-    //     />
+function App() {
+  const [isAuthenticated, setIsAuthenticated] = useState(
+    localStorage.getItem("isAuthenticated") === "true"
+  );
 
-    //     {/* Other Pages (Accessible only if logged in) */}
-    //     <Route
-    //       path="/article-reader"
-    //       element={isAuthenticated ? <ArticleReader /> : <Navigate to="/" />}
-    //     />
-    //     <Route
-    //       path="/pdf-uploader"
-    //       element={isAuthenticated ? <PdfUploader /> : <Navigate to="/" />}
-    //     />
-    //     <Route
-    //       path="/text-summarizer"
-    //       element={isAuthenticated ? <TextSummarizer /> : <Navigate to="/" />}
-    //     />
-    //     <Route
-    //       path="/realtime-editor"
-    //       element={
-    //         isAuthenticated ? (
-    //           <RealtimeEditor docId="sample-document" />
-    //         ) : (
-    //           <Navigate to="/" />
-    //         )
-    //       }
-    //     />
-    //   </Routes>
-    // </Router>
-    // <PdfUploader/>
-    // <GrammarChecker/>
-    <ResearchEditor/>
-    // <About/>
-    // <ArticleReader/>
-    // <Chatbot/>
-    // <CitationGenerator/>
-  //  <Auth/>
-  
-    
+  useEffect(() => {
+    localStorage.setItem("isAuthenticated", isAuthenticated.toString());
+  }, [isAuthenticated]);
+
+  return (
+    <Router>
+      <AppRoutes
+        isAuthenticated={isAuthenticated}
+        setIsAuthenticated={setIsAuthenticated}
+      />
+    </Router>
   );
 }
 

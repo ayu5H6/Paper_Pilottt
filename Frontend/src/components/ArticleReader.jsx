@@ -1,21 +1,23 @@
+"use client"
 import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
-
+import { BookOpen, Search, Info, ArrowRight, X } from "lucide-react";
+//article-reader
 const ArticleReader = () => {
-  const [article, setArticle] = useState("");
-  const [processedArticle, setProcessedArticle] = useState("");
-  const [definitions, setDefinitions] = useState({});
-  const [activeWord, setActiveWord] = useState(null);
-  const tooltipRef = useRef(null);
+  const [article, setArticle] = useState(""); // Store the article
+  const [processedArticle, setProcessedArticle] = useState(""); // Store the processed article with clickable words
+  const [definitions, setDefinitions] = useState({}); // Store definitions
+  const [activeWord, setActiveWord] = useState(null); // Store active word for tooltip
+  const tooltipRef = useRef(null); // Reference for the tooltip
 
-  // Function to identify difficult words
+  // Function to get difficult words (length > 8)
   const getDifficultWords = (text) => {
     const words = text.split(/\s+/);
     const difficultWords = words.filter((word) => word.length > 8);
     return [...new Set(difficultWords)];
   };
 
-  // Fetch definitions on word click
+  
   const fetchDefinition = async (word) => {
     const cleanWord = word.replace(/[^\w\s]|_/g, "").toLowerCase();
     if (definitions[word]) {
@@ -80,51 +82,82 @@ const ArticleReader = () => {
       fetchDefinition(word);
     }
   };
-
+ 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50 p-6 md:p-10">
-      <div className="max-w-4xl mx-auto bg-white rounded-xl shadow-lg overflow-hidden">
-        <div className="bg-blue-600 text-white p-6">
-          <h1 className="text-3xl font-bold">
-            Article Reader with Click-to-Define
-          </h1>
-          <p className="mt-2 text-blue-100">
-            Paste your article below, and click on highlighted words to see
-            their definitions.
-          </p>
-        </div>
-
-        <div className="p-6">
-          <div className="mb-6">
-            <textarea
-              value={article}
-              onChange={(e) => setArticle(e.target.value)}
-              rows="8"
-              placeholder="Paste your article here..."
-              className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 text-gray-800"
-            />
+    <div className="min-h-screen bg-gradient-to-b from-slate-50 to-white">
+      {/* Hero Section */}
+      <section className="py-16 md:py-24 px-4">
+        
+        <div className="max-w-5xl mx-auto text-center">
+          <div className="inline-flex items-center justify-center p-2 bg-sky-100 rounded-full mb-6">
+            <BookOpen className="w-5 h-5 text-sky-700 mr-2" />
+            <span className="text-sm font-medium text-sky-700">
+              Smart Reading Assistant
+            </span>
           </div>
 
-          <button
-            onClick={processArticle}
-            className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition duration-200 font-medium flex items-center space-x-2"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-5 w-5"
-              viewBox="0 0 20 20"
-              fill="currentColor"
-            >
-              <path
-                fillRule="evenodd"
-                d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
-                clipRule="evenodd"
-              />
-            </svg>
-            <span>Process Article</span>
-          </button>
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-slate-900 mb-6">
+            Understand Every Word You Read
+          </h1>
 
-          {processedArticle && (
+          <p className="text-lg md:text-xl text-slate-600 max-w-3xl mx-auto mb-8">
+            Paste any text and instantly get definitions for complex words with
+            a simple click. Enhance your reading comprehension and expand your
+            vocabulary effortlessly.
+          </p>
+
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12">
+            <button
+              onClick={() => document.getElementById("article-input").focus()}
+              className="px-6 py-3 bg-sky-600 text-white rounded-lg hover:bg-sky-700 transition duration-200 font-medium flex items-center gap-2 w-full sm:w-auto"
+            >
+              <Search className="w-5 h-5" />
+              Start Reading Now
+            </button>
+
+            <a
+              href="#how-it-works"
+              className="px-6 py-3 bg-white text-sky-700 border border-sky-200 rounded-lg hover:bg-sky-50 transition duration-200 font-medium flex items-center gap-2 w-full sm:w-auto"
+            >
+              <Info className="w-5 h-5" />
+              How It Works
+            </a>
+          </div>
+        </div>
+      </section>
+
+      {/* Main Content */}
+      <section className="py-8 px-4 max-w-5xl mx-auto">
+        <div className="mb-12">
+          <label
+            htmlFor="article-input"
+            className="block text-lg font-medium text-slate-700 mb-3"
+          >
+            Paste your article below
+          </label>
+          <textarea
+            id="article-input"
+            value={article}
+            onChange={(e) => setArticle(e.target.value)}
+            rows="8"
+            placeholder="Paste your article here..."
+            className="w-full px-4 py-3 rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent transition duration-200 text-slate-800 shadow-sm"
+          />
+
+          <div className="mt-4 flex justify-end">
+            <button
+              onClick={processArticle}
+              disabled={!article.trim()}
+              className="px-6 py-3 bg-sky-600 text-white rounded-lg hover:bg-sky-700 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-offset-2 transition duration-200 font-medium flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              Process Article
+              <ArrowRight className="w-5 h-5" />
+            </button>
+          </div>
+        </div>
+
+        {/* Processed Article */}
+        {processedArticle && (
             <div className="mt-10 relative" onClick={handleWordClick}>
               <div className="flex items-center space-x-2 mb-4">
                 <h2 className="text-2xl font-bold text-gray-800">
@@ -204,14 +237,65 @@ const ArticleReader = () => {
               )}
             </div>
           )}
-        </div>
-      </div>
 
-      <div className="mt-6 text-center text-gray-500 text-sm">
-        <p>Click on blue highlighted words to see their definitions.</p>
-      </div>
+        {/* How It Works Section */}
+        <div id="how-it-works" className="mt-24 mb-16">
+          <h2 className="text-3xl font-bold text-slate-900 mb-8 text-center">
+            How It Works
+          </h2>
+
+          <div className="grid md:grid-cols-3 gap-8">
+            <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-100">
+              <div className="w-12 h-12 bg-sky-100 rounded-full flex items-center justify-center mb-4">
+                <span className="text-sky-700 font-bold">1</span>
+              </div>
+              <h3 className="text-xl font-semibold text-slate-900 mb-3">
+                Paste Your Text
+              </h3>
+              <p className="text-slate-600">
+                Simply paste any article, essay, or text you're reading into the
+                text area above.
+              </p>
+            </div>
+
+            <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-100">
+              <div className="w-12 h-12 bg-sky-100 rounded-full flex items-center justify-center mb-4">
+                <span className="text-sky-700 font-bold">2</span>
+              </div>
+              <h3 className="text-xl font-semibold text-slate-900 mb-3">
+                Process Content
+              </h3>
+              <p className="text-slate-600">
+                Click the "Process Article" button and our system will
+                automatically identify complex words.
+              </p>
+            </div>
+
+            <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-100">
+              <div className="w-12 h-12 bg-sky-100 rounded-full flex items-center justify-center mb-4">
+                <span className="text-sky-700 font-bold">3</span>
+              </div>
+              <h3 className="text-xl font-semibold text-slate-900 mb-3">
+                Click & Learn
+              </h3>
+              <p className="text-slate-600">
+                Click on any highlighted word to instantly see its definition
+                without leaving the page.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="py-8 border-t border-slate-200">
+        <div className="max-w-5xl mx-auto px-4 text-center text-slate-500 text-sm">
+          <p>Made By Bhumi</p>
+        </div>
+      </footer>
     </div>
   );
 };
 
 export default ArticleReader;
+
