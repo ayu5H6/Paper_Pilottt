@@ -6,7 +6,7 @@ import { Worker, Viewer } from "@react-pdf-viewer/core"
 import "@react-pdf-viewer/core/lib/styles/index.css"
 import { defaultLayoutPlugin } from "@react-pdf-viewer/default-layout"
 import "@react-pdf-viewer/default-layout/lib/styles/index.css"
-//sky
+//sky //raw
 import {
   FileText,
   Upload,
@@ -366,13 +366,14 @@ const PdfUploader = () => {
     ])
   }
 
+  
   // Render formatted response in a nicer UI
   const renderFormattedContent = () => {
     if (!formattedContent) return null
 
     return (
       <div className="space-y-4 animate-fade-in">
-        <h2 className="text-xl font-bold text-gray-800 flex items-center bg-gradient-to-r from-sky-600 to-sky-500 bg-clip-text text-transparent">
+        <h2 className="text-xl font-bold text-gray-800 flex items-center bg-gradient-to-r from-sky-600 to-sky-500 bg-clip-text ">
           <BookOpen className="mr-2 h-6 w-6 text-sky-500" />
           {formattedContent.title}
         </h2>
@@ -394,13 +395,15 @@ const PdfUploader = () => {
             >
               <h3 className="text-base font-semibold text-gray-800 flex items-center">
                 <div className="w-2 h-2 rounded-full bg-sky-500 mr-2 animate-pulse"></div>
-                {section.title}
+                <p className="text-lg font-semibold text-gray-800 mb-2">
+                  {section.title}
+                </p>
               </h3>
               <div className="flex items-center space-x-2">
                 <button
                   onClick={(e) => {
-                    e.stopPropagation()
-                    copyToClipboard(section.content, index)
+                    e.stopPropagation();
+                    copyToClipboard(section.content, index);
                   }}
                   className="p-1.5 rounded-full hover:bg-gray-100 transition-all duration-200 transform hover:scale-110"
                   title="Copy to clipboard"
@@ -450,14 +453,16 @@ const PdfUploader = () => {
                     ))}
                   </ul>
                 ) : (
-                  <p className="text-gray-700 leading-relaxed pl-6 border-l-2 border-sky-200">{section.content}</p>
+                  <p className="text-gray-700 leading-relaxed whitespace-pre-line">
+                    {section.content}
+                  </p>
                 )}
               </div>
             )}
           </div>
         ))}
       </div>
-    )
+    );
   }
 //sky
   // Toggle fullscreen view
@@ -548,7 +553,7 @@ const PdfUploader = () => {
               <div className="w-8 h-8 rounded-full bg-sky-50 flex items-center justify-center mr-2">
                 <AlignLeft className="h-4 w-4 text-sky-600" />
               </div>
-              <h2 className="font-medium text-gray-800">Gemini Analysis</h2>
+              <h2 className="font-medium text-gray-800">AI Analysis</h2>
             </div>
             <div className="flex items-center">
               {isLoading && (

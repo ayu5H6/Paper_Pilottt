@@ -4,7 +4,7 @@ import { Menu, X, ChevronDown, ChevronUp } from "lucide-react";
 import { Send } from "lucide-react";
 
 //present
-
+//buy
 const Navbar = ({ isAuthenticated, setIsAuthenticated }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
@@ -93,7 +93,7 @@ const Navbar = ({ isAuthenticated, setIsAuthenticated }) => {
           <div className="hidden md:block">
             <div className="flex items-center space-x-4">
               <Link
-                to="/"
+                to="/Buy"
                 className={`px-3 py-2 text-lg font-medium ${
                   location.pathname === "/" 
                     ? "text-blue-600 border-b-2 border-blue-600" 

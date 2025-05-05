@@ -54,42 +54,65 @@ const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
 const analyzeWithGemini = async (text) => {
   const prompt = `
-    You are an AI designed to analyze academic papers.Your name is ASM so never use Gemini as your name to introduce youselve. You have to analyze papers provided to you.
+  You are ASM, an AI designed to analyze academic papers.
+  Structure your response with these sections:
+  - Abstract
+  - Introduction
+  - Methodology
+  - Results
+  - Discussion
+  - Conclusion
 
-    - **Abstract**: A concise summary of the paper's key points.
-    - **Introduction**: An introduction to the topic, context, and objectives.
-    - **Methodology**: Description of the methods or framework proposed.
-    - **Results**: Key findings from the study or paper.
-    - **Discussion**: Analysis, implications, and suggestions based on the results.
-    - **Conclusion**: Summary of the study, key takeaways, and recommendations.
+  Do NOT include any extra titles or overall document titles like "Document Analysis" or "Title". Only provide the sections with headings and respective content.
 
-    Ensure the content is formatted in a clean and readable HTML structure with appropriate heading tags (h2 for section titles), paragraphs (p), and emphasized text (strong for important points). The output should be ready for display on the frontend, with proper spacing and styling using basic HTML tags. Here's the paper content for analysis:
+  Each section should be followed by a blank line, then its content. Ensure each section heading is on a new line followed by the content in its own paragraph.
 
-    Paper Content:
-    ${text}
-  `;
+  Paper Content:
+  ${text}
+`;
 
   try {
+    // Generate content from the model
     const result = await model.generateContent(prompt);
-    // Ensure the result is returned in a safe, properly formatted HTML string
-    let formattedResult = result.response.text(); // Assuming Gemini returns HTML string
-    formattedResult = formattedResult
-      .replace(/```html/g, "") // Remove starting markdown block
-      .replace(/```/g, "") // Remove closing markdown block
-      .replace(/\n/g, " ") // Replace newlines with spaces
-      .replace(/Abstract/g, "<strong>Abstract</strong>")
-      .replace(/Introduction/g, "<strong>Introduction</strong>")
-      .replace(/Methodology/g, "<strong>Methodology</strong>")
-      .replace(/Results/g, "<strong>Results</strong>")
-      .replace(/Discussion/g, "<strong>Discussion</strong>")
-      .replace(/Conclusion/g, "<strong>Conclusion</strong>");
 
-    return formattedResult;
+    // Ensure the result is properly extracted from the response
+    const rawText = result.response?.text ? result.response.text() : result;
+
+    // Split the content by sections, looking for section headers like "Abstract", "Introduction", etc.
+    const sections = rawText
+      .split(/\n(?=[A-Z][a-z]+(?: [A-Z][a-z]+)*\n)/) // Split by titles like "Abstract", "Introduction"
+      .map((block) => {
+        // Split each block into the title and content
+        const [title, ...rest] = block.trim().split("\n");
+
+        // Return an object with the section title and content, removing excess whitespace
+        return {
+          title: title.trim(),
+          content: rest.join(" ").trim(),
+        };
+      });
+
+    // Format it as plain text without unnecessary newlines
+    const formattedContent = sections
+      .map((section) => {
+        // Return formatted output with the title and content, ensuring no additional newlines
+        return `${section.title}: ${section.content}`; // Concatenate title and content without extra newlines
+      })
+      .join(" "); // Use space to join sections instead of newlines
+
+    return formattedContent; // Return the formatted content (plain text without HTML tags)
   } catch (error) {
-    console.error("Gemini Error:", error);
+    console.error("Error generating content:", error);
     return { error: "Gemini API failed" };
   }
+
 };
+
+
+
+
+
+
 
 app.post("/analyze", upload.single("pdf"), async (req, res) => {
   if (!req.file) {
