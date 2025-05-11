@@ -46,7 +46,10 @@ const GeminiChat = () => {
     setLoading(true);
     
     try {
-      const res = await axios.post("http://localhost:5000/api/gemini", { question: input });
+      const res = await axios.post(
+        "https://paper-pilottt.onrender.com/api/gemini",
+        { question: input }
+      );
       const botMessage = { text: res.data.result, sender: "bot", timestamp: new Date().toISOString() };
       setMessages((prev) => [...prev, botMessage]);
     } catch (error) {

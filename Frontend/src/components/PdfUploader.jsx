@@ -270,12 +270,12 @@ const PdfUploader = () => {
 
     try {
       const response = await axios.post(
-        "http://localhost:5000/analyze", // Backend endpoint
+        "https://paper-pilottt.onrender.com", // Backend endpoint
         formData,
         {
           headers: { "Content-Type": "multipart/form-data" }, // Set the proper header
-        },
-      )
+        }
+      );
 
       if (response.data.extracted_sections) {
         // Format the raw JSON for display
