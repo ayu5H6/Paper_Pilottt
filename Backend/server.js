@@ -14,7 +14,7 @@ const upload = multer({ dest: "uploads/" });
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: "http://localhost:5173", // React frontend URL
+    origin: "http://localhost:5173", 
     methods: ["GET", "POST"],
   },
 });
@@ -22,7 +22,7 @@ const io = new Server(server, {
 app.use(cors());
 app.use(express.json());
 
-const documents = {}; // Stores documents per room
+const documents = {}; 
 
 // Handle WebSocket connections
 io.on("connection", (socket) => {
@@ -72,35 +72,35 @@ const analyzeWithGemini = async (text) => {
 `;
 
   try {
-    // Generate content from the model
+   
     const result = await model.generateContent(prompt);
 
-    // Ensure the result is properly extracted from the response
+    
     const rawText = result.response?.text ? result.response.text() : result;
 
-    // Split the content by sections, looking for section headers like "Abstract", "Introduction", etc.
+    
     const sections = rawText
-      .split(/\n(?=[A-Z][a-z]+(?: [A-Z][a-z]+)*\n)/) // Split by titles like "Abstract", "Introduction"
+      .split(/\n(?=[A-Z][a-z]+(?: [A-Z][a-z]+)*\n)/) 
       .map((block) => {
-        // Split each block into the title and content
+       
         const [title, ...rest] = block.trim().split("\n");
 
-        // Return an object with the section title and content, removing excess whitespace
+       
         return {
           title: title.trim(),
           content: rest.join(" ").trim(),
         };
       });
 
-    // Format it as plain text without unnecessary newlines
+   
     const formattedContent = sections
       .map((section) => {
-        // Return formatted output with the title and content, ensuring no additional newlines
-        return `${section.title}: ${section.content}`; // Concatenate title and content without extra newlines
+      
+        return `${section.title}: ${section.content}`; 
       })
-      .join(" "); // Use space to join sections instead of newlines
+      .join(" "); 
 
-    return formattedContent; // Return the formatted content (plain text without HTML tags)
+    return formattedContent; 
   } catch (error) {
     console.error("Error generating content:", error);
     return { error: "Gemini API failed" };

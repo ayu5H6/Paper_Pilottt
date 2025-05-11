@@ -4,7 +4,7 @@ import io from "socket.io-client";
 import { FileText, Users, Edit, Clock } from 'lucide-react'; 
 import axios from "axios";
 
-const socket = io("http://localhost:5000"); // Connect to backend
+const socket = io("https://paper-pilottt.onrender.com"); // Connect to backend
 
 const ResearchEditor = () => {
   const [messages, setMessages] = useState([
@@ -140,7 +140,7 @@ const ResearchEditor = () => {
       {/* Navbar */}
       <div className="flex items-center justify-between px-4 py-2 border-b border-sky-200 bg-sky shadow-sm">
       <div className="flex items-center">
-  <h1 className="text-xl font-medium font-semibold text-blue-900 flex items-center">
+  <h1 className="text-xl  font-semibold text-blue-900 flex items-center">
     <FileText className="mr-2" />Instantly fetch and view the info you type – your research, summarized and at your fingertips.
   </h1>
   {roomId && (
