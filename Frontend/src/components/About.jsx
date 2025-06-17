@@ -3,19 +3,15 @@ import { Link } from "react-router-dom";
 import TypewriterText from "./TypewriterText";
 import { useNavigate } from "react-router-dom";
 
-
 //predicting
-//started
 
 import { ChevronRight, Star, Check, Download, ArrowRight, ArrowDown, ArrowUp, User, Code, FileText, Bookmark, Zap, Book, Award, Clock, ArrowLeft, Smartphone, BarChart, Building, MousePointer, MessageSquare, Pencil, Bell, Save, Twitter, Linkedin, Github, Sun, Moon, Play, Share } from 'lucide-react';
 
 // Animation component for elements that fade in when scrolled into view //PaperPilot
-//demo
 
 const FadeInOnScroll = ({ children, delay = 0, className = "" }) => {
   const [isVisible, setIsVisible] = useState(false);
   const domRef = useRef();
-  
 //learn from academic
   useEffect(() => {
     const observer = new IntersectionObserver(entries => {
@@ -25,11 +21,9 @@ const FadeInOnScroll = ({ children, delay = 0, className = "" }) => {
       }
     });
     
-    //platform
     observer.observe(domRef.current);
     return () => observer.disconnect();
   }, []);
-//about
   return (
     <div
       ref={domRef}
@@ -40,7 +34,6 @@ const FadeInOnScroll = ({ children, delay = 0, className = "" }) => {
     </div>
   );
 };
-//started
 
 // Interactive testimonial carousel component
 const TestimonialCarousel = () => {
@@ -52,12 +45,14 @@ const TestimonialCarousel = () => {
       position: "Professor of Economics, Stanford University",
       avatar: "/learn1.jpg"
     },
+    
     {
       quote: "As a non-native English speaker, the grammar checker has been invaluable for my academic writing. My papers are now published in top journals.",
       author: "Wei Zhang",
       position: "PhD Candidate, MIT",
       avatar: "/learn.jpg"
     },
+    
     {
       quote: "The collaborative features allowed my research team to work seamlessly across three time zones. A game-changer for international collaboration.",
       author: "Professor James Wilson",
@@ -233,7 +228,6 @@ const FeatureShowcase = () => {
       icon: <User size={48} className="text-purple-600" />,
       image: "/gigi.jpg",
       route: "/realtime-editor"
-     
     },
     analytics: {
       title: "Academic Analytics",
@@ -241,7 +235,6 @@ const FeatureShowcase = () => {
       icon: <Zap size={48} className="text-yellow-600" />,
       image: "/chik.jpg",
       route: "/citation-generator"
-      
     }
   };
 //versities
@@ -407,9 +400,7 @@ const TrialForm = () => {
       setErrors(newErrors);
       return;
     }
-    
     setIsSubmitting(true);
-    
     // Simulate API call
     setTimeout(() => {
       setIsSubmitting(false);
@@ -639,14 +630,16 @@ const About = () => {
       students: 1248,
       bio: "Leading expert in natural language processing with 15+ years experience in academia and industry research."
     },
+    
     { 
       name: "Megha Bhatt", 
       specialty: "Full Stack Developer & AI Enthusiast", 
-      image: "/learn1.jpg",
+      image: "/megha.jpg",
       publications: 67,
       students: 2105,
       bio: "Award-winning educator specializing in machine learning algorithms and their applications in academic research."
     },
+    
     { 
       name: "Ayush Thakur", 
       specialty: "Data Science & Statistics", 
@@ -665,12 +658,14 @@ const About = () => {
       image: "/research.jpg",
       icon: <Code size={24} className="text-blue-500" />
     },
+    
     { 
       title: "PDF Document Analysis", 
       description: "Upload research papers and our AI extracts key findings, methodologies, and citations while generating comprehensive summaries tailored to your research focus.",
       image: "/chik.jpg",
       icon: <FileText size={24} className="text-purple-500" />
     },
+    
     { 
       title: "Realtime Collaboration", 
       description: "Seamlessly collaborate with research partners across institutions with conflict-free editing, commenting, and version control in a secure environment.",
@@ -685,14 +680,17 @@ const About = () => {
       question: "How can PaperPilot improve my academic writing?",
       answer: "PaperPilot uses advanced AI to analyze your writing style, identify grammar issues, suggest improvements for clarity and flow, and ensure proper citation formatting. Our system learns from millions of academic papers to provide discipline-specific recommendations that align with publication standards in your field."
     },
+    
     {
       question: "Can I collaborate with others on the platform?",
       answer: "Our real-time collaborative editor allows multiple researchers to work simultaneously on the same document with character-by-character synchronization. You can track changes, leave contextual comments, assign tasks, and maintain a complete version history. We support permission controls to manage access levels for different collaborators."
     },
+    
     {
       question: "How does the PDF analyzer work?",
       answer: "Our PDF analyzer uses machine learning to extract structured information from research papers. It identifies key sections, methodologies, findings, data tables, and citations. The system then generates comprehensive summaries, highlights connections to your existing research, and identifies potential gaps or opportunities for your work."
     },
+    
     {
       question: "Is PaperPilot suitable for different academic disciplines?",
       answer: "PaperPilot supports researchers across disciplines from humanities to hard sciences. We offer specialized tools for different fields, including STEM-specific equation editors, citation styles for over 20 disciplines, field-specific writing guidelines, and integrations with major research databases and repositories relevant to your area of study."
@@ -757,10 +755,7 @@ const About = () => {
     <div className={`relative w-full min-h-screen overflow-hidden ${isDarkMode ? 'bg-gray-900 text-white' : 'bg-white text-gray-900'}`}>
       {/* Progress bar indicator */}
       <div className="fixed top-0 left-0 h-1 bg-blue-600 z-50" style={{ width: 'var(--scroll-progress, 0%)' }}></div>
-      
-      {/* Sticky header after scrolling past hero */}
-      
-      
+
       {/* Hero section sarah */}
       
       <section className="relative pt-24 pb-32 md:pt-32 md:pb-48 overflow-hidden">
@@ -856,8 +851,6 @@ const About = () => {
     With cutting-edge AI and a student-friendly design, Paper Pilot guarantees 100% accuracy, real-time efficiency, and peace of mind for your academic needs.
   </p>
 </div>
-
-
                   <div className="flex justify-between items-center mt-4 pt-4 border-t border-gray-100 dark:border-gray-700">
                     <div className="flex items-center text-sm text-gray-500 dark:text-gray-400">
                       <Clock size={14} className="mr-1" /> Auto-saved 2 minutes ago
@@ -886,7 +879,6 @@ const About = () => {
         </svg>
       </div>
     </section>
-  
       
       {/* Stats section */}
       <section className={`${isDarkMode ? 'bg-gray-800' : 'bg-gray-50'} py-16 relative`}>
