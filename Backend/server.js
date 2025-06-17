@@ -8,7 +8,6 @@ const pdfParse = require("pdf-parse");
 const { Server } = require("socket.io");
 const fs = require("fs");
 
-
 const app = express();
 const upload = multer({ dest: "uploads/" });
 const server = http.createServer(app);
@@ -24,7 +23,8 @@ app.use(express.json());
 
 const documents = {}; 
 
-// Handle WebSocket connections
+// Handle WebSocket connection
+
 io.on("connection", (socket) => {
   console.log("New client connected:", socket.id);
 
@@ -39,15 +39,13 @@ io.on("connection", (socket) => {
 
   socket.on("updateDocument", ({ roomId, content }) => {
     documents[roomId] = content;
-    socket.to(roomId).emit("documentUpdated", content); // Update others
+    socket.to(roomId).emit("documentUpdated", content); 
   });
 
   socket.on("disconnect", () => {
     console.log("Client disconnected:", socket.id);
   });
 });
-
-
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
@@ -64,20 +62,15 @@ const analyzeWithGemini = async (text) => {
   - Conclusion
 
   Do NOT include any extra titles or overall document titles like "Document Analysis" or "Title". Only provide the sections with headings and respective content.
-
   Each section should be followed by a blank line, then its content. Ensure each section heading is on a new line followed by the content in its own paragraph.
-
   Paper Content:
   ${text}
 `;
 
   try {
-   
     const result = await model.generateContent(prompt);
-
     
     const rawText = result.response?.text ? result.response.text() : result;
-
     
     const sections = rawText
       .split(/\n(?=[A-Z][a-z]+(?: [A-Z][a-z]+)*\n)/) 
@@ -108,12 +101,6 @@ const analyzeWithGemini = async (text) => {
 
 };
 
-
-
-
-
-
-
 app.post("/analyze", upload.single("pdf"), async (req, res) => {
   if (!req.file) {
     return res.status(400).json({ error: "No file uploaded" });
@@ -127,7 +114,7 @@ app.post("/analyze", upload.single("pdf"), async (req, res) => {
     // Extract text
     const text = data.text;
 
-    // Get AI analysis
+    // Get analysis
     const structuredResponse = await analyzeWithGemini(text);
 
     res.json({ extracted_sections: structuredResponse });
