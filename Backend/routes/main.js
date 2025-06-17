@@ -1,5 +1,7 @@
 const { GoogleGenerativeAI } = require ("@google/generative-ai");
+
 require('dotenv').config();
+
 const express = require('express');
 const bodyParser= require('body-parser');
 const app = express();
@@ -8,6 +10,7 @@ app.use(bodyParser.json());
 app.get('/' , (req, res) => {
     res.send("Hello Gemini");
 })
+
 const genAI = new GoogleGenerativeAI(process.env.API_KEY);
 
 const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
@@ -37,11 +40,8 @@ app.post('/api/content', async(req, res) => {
     
     catch(err){
         res.send("error: " + err)
-
     }
 })
 app.listen(3000, ()=>{
     console.log("Server is running on port 3000 successfully");
-
 })
-
