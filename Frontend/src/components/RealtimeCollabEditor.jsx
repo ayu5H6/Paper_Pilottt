@@ -12,7 +12,7 @@ const ResearchEditor = () => {
       text: "Hello! I'm your Research AI assistant. Write something in the editor, and I can help you improve your research paper.",
       sender: "ai",
     },
-    //research
+ 
   ]);
   const [inputMessage, setInputMessage] = useState("");
   const [roomId, setRoomId] = useState("");
@@ -21,7 +21,7 @@ const ResearchEditor = () => {
   const [isChatOpen, setIsChatOpen] = useState(true);
   const editorRef = useRef(null);
   const chatContainerRef = useRef(null);
-//hide
+
   // Join a room
   const joinRoom = () => {
     const id = prompt("Enter room ID or create a new one:");
@@ -29,7 +29,7 @@ const ResearchEditor = () => {
       setRoomId(id);
       socket.emit("joinRoom", id);
       
-      // In a real implementation, this would come from the server
+
       const username = localStorage.getItem("username") || "Anonymous User";
       setCollaborators(prev => ["You (Admin)", ...prev.filter(name => name !== "You (Admin)")]);
     }
@@ -70,7 +70,7 @@ const ResearchEditor = () => {
       const aiResponse = { text: response.data.text, sender: "ai" };
       setMessages([...updatedMessages, aiResponse]);
   
-      // Auto-scroll to bottom
+
       if (chatContainerRef.current) {
         chatContainerRef.current.scrollTop =
           chatContainerRef.current.scrollHeight;
@@ -85,12 +85,11 @@ const ResearchEditor = () => {
   };
 
   // Send document updates to other users in the room
-  //button
   const handleEditorChange = (content) => {
     if (!editorRef.current) return;
 
     const editor = editorRef.current;
-    const cursorPosition = editor.selection.getRng(); // Save cursor position
+    const cursorPosition = editor.selection.getRng();
 
     setEditorContent(content);
     if (roomId) {
@@ -151,7 +150,6 @@ const ResearchEditor = () => {
   
 </div>
         
-        
         <div className="flex items-center gap-2">
           {/* Collaborators chat */}
           <div className="flex items-center gap-1 mr-4">
@@ -197,8 +195,6 @@ const ResearchEditor = () => {
             />
           </div>
         </div>
-
-    
 {
   /* Chat Section - Conditionally shown */
 }
@@ -340,8 +336,6 @@ const ResearchEditor = () => {
     </div>
   </button>
 </div>
-
-
       </div>
     </div>
   );
