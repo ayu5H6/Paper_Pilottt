@@ -634,7 +634,7 @@ const About = () => {
     { 
       name: "Megha Bhatt", 
       specialty: "Full Stack Developer & AI Enthusiast", 
-      image: "/megha1.jpg",
+      image: "/megha.jpg",
       publications: 46,
       students: 2105,
       bio: "Award-winning educator specializing in machine learning algorithms and their applications in academic research."
